@@ -1,0 +1,98 @@
+#include "BluetoothSerial.h"
+
+BluetoothSerial SerialBT;
+
+// Pines LEDs
+const int led1 = 2;
+const int led2 = 4;
+const int led3 = 5;
+const int led4 = 18;
+
+// Pines botones
+const int btn1 = 12;
+const int btn2 = 13;
+const int btn3 = 14;
+const int btn4 = 27;
+
+String mensaje = "";
+
+// Estados para botones
+bool estado1 = LOW;
+bool estado2 = LOW;
+bool estado3 = LOW;
+bool estado4 = LOW;
+
+void setup() {
+  Serial.begin(115200);
+  SerialBT.begin("ESP_carlinhox");
+
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+
+  pinMode(btn1, INPUT_PULLUP);
+  pinMode(btn2, INPUT_PULLUP);
+  pinMode(btn3, INPUT_PULLUP);
+  pinMode(btn4, INPUT_PULLUP);
+
+  Serial.println("Listo para controlar 4 LEDs");
+}
+
+void loop() {
+
+  // 🔵 CONTROL POR BLUETOOTH
+  while (SerialBT.available()) {
+    char c = SerialBT.read();
+
+    if (c == '\n') {
+      mensaje.trim();
+      mensaje.toLowerCase();
+
+      Serial.println("Recibido: " + mensaje);
+
+      if (mensaje == "hola1") digitalWrite(led1, HIGH);
+      else if (mensaje == "adios1") digitalWrite(led1, LOW);
+
+      else if (mensaje == "hola2") digitalWrite(led2, HIGH);
+      else if (mensaje == "adios2") digitalWrite(led2, LOW);
+
+      else if (mensaje == "hola3") digitalWrite(led3, HIGH);
+      else if (mensaje == "adios3") digitalWrite(led3, LOW);
+
+      else if (mensaje == "hola4") digitalWrite(led4, HIGH);
+      else if (mensaje == "adios4") digitalWrite(led4, LOW);
+
+      mensaje = "";
+    } else {
+      mensaje += c;
+    }
+  }
+
+  // 🔘 CONTROL CON BOTONES (toggle)
+  if (digitalRead(btn1) == LOW) {
+    estado1 = !estado1;
+    digitalWrite(led1, estado1);
+    delay(300);
+  }
+
+  if (digitalRead(btn2) == LOW) {
+    estado2 = !estado2;
+    digitalWrite(led2, estado2);
+    delay(300);
+  }
+
+  if (digitalRead(btn3) == LOW) {
+    estado3 = !estado3;
+    digitalWrite(led3, estado3);
+    delay(300);
+  }
+
+  if (digitalRead(btn4) == LOW) {
+    estado4 = !estado4;
+    digitalWrite(led4, estado4);
+    delay(300);
+  }
+
+  delay(20);
+}
