@@ -7,7 +7,7 @@ char dato;
 
 void setup() {
   Serial.begin(115200);
-  SerialBT.begin("ESP32_Control"); // Nombre del Bluetooth
+  SerialBT.begin("ESP32_carlinhox"); // Nombre del Bluetooth
 
   pinMode(rele, OUTPUT);
   digitalWrite(rele, LOW);
